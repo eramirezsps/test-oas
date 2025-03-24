@@ -1,0 +1,66 @@
+openapi: 3.0.4
+info:
+  title: Swagger HolaMundo - OpenAPI 3.0
+  description: |-
+    This is a sample HolaMundo based on the OpenAPI 3.0 specification.  
+  version: 1.0.0
+
+servers:
+  - url: https://HolaMundo3.swagger.io/api/v3
+tags:
+  - name: HolaMundo
+    description: Everything about your HolaMundo
+paths:
+  /HolaMundo:
+    get:
+      tags:
+        - HolaMundo
+      summary: Return HolaMundo.
+      description: Only Response Hola Mundo.
+      operationId: getHolaMundo
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Response"
+            application/xml:
+              schema:
+                  $ref: "#/components/schemas/Response"
+        '400':
+          description: Invalid status value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Response:
+      type: object
+      properties:
+        response:
+          type: string
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: '##default'
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
