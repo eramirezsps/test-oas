@@ -87,4 +87,4 @@ jobs:
 
     - name: Publish API to Anypoint Exchange
       run: |
-        api-catalog publish-asset --organization="$ANYPOINT_ORG" --client_id="$ANYPOINT_CLIENT_ID" --client_secret="$ANYPOINT_CLIENT_SECRET"
+        api-catalog publish-asset --organization="$ANYPOINT_ORGANIZATIONID" --client_id="$ANYPOINT_CLIENTID" --client_secret="$ANYPOINT_CLIENTSECRET"
