@@ -3,7 +3,7 @@ info:
   title: Swagger HolaMundo - OpenAPI 3.0
   description: |-
     This is a sample HolaMundo based on the OpenAPI 3.0 specification.  
-  version: 1.0.0
+  version: 1.0.1
 
 servers:
   - url: https://HolaMundo3.swagger.io/api/v3
