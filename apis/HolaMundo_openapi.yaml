@@ -43,17 +43,7 @@ components:
       properties:
         response:
           type: string
-    ApiResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-        type:
-          type: string
-        message:
-          type: string
-      xml:
-        name: '##default'
+          example: "Hola Mundo!"
     Error:
       type: object
       properties:
