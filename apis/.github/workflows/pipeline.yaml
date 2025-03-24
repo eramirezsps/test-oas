@@ -1,0 +1,90 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  pull_request:
+    branches:
+      - main
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    env:
+      ANYPOINT_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENTID }} 
+      ANYPOINT_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENTSECRET }}
+      ANYPOINT_ORG: ${{ secrets.ANYPOINT_ORGANIZATIONID }}
+
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        
+    - name: Get Rulesets & Install Dependencies
+      run: |
+        cd evaluations/scripts
+        npm install 
+        cd ../../
+        mv evaluations /tmp/exchange-evaluation
+        
+    - name: Install Anypoint CLI
+      run: |
+        npm install -g anypoint-cli-v4
+        
+    - name: Install Governance Plugin
+      run: |
+        anypoint-cli-v4 plugins:install anypoint-cli-governance-plugin
+
+    - name: Install api-catalog cli
+      run: |
+        npm install -g api-catalog-cli@latest
+    
+    - name: Create Descriptor File
+      run: |
+        api-catalog create-descriptor
+        cat catalog.yaml
+
+    - name: Get all changed yaml files
+      id: changed-yaml-files
+      uses: tj-actions/changed-files@v45
+
+    - name: List all changed files yaml files
+      if: steps.changed-yaml-files.outputs.any_changed == 'true'
+      env:
+        ALL_CHANGED_FILES: ${{ steps.changed-yaml-files.outputs.all_changed_files }}
+      run: |
+        #touch catalog_back.yaml
+        for file in ${ALL_CHANGED_FILES}; do
+          echo "$file was changed"
+          #node /tmp/exchange-evaluation/scripts/process-modified-specifications.js "$file"
+        done
+        
+    - name: Generate Exchange Json Files
+      run: |
+        node /tmp/exchange-evaluation/scripts/exchange-json-files.js
+        cat specs.txt
+
+    - name: Validate
+      run: |
+        RULESETS=$(ls /tmp/exchange-evaluation/rulesets/ | awk '{printf "/tmp/exchange-evaluation/rulesets/"$0" "}')
+        echo "$GITHUB_WORKSPACE"
+        file="specs.txt"
+        for SPEC in $(cat "$file"); do
+          [[ -z "$SPEC" || "$SPEC" == \#* ]] && continue  # Ignorar líneas vacías o comentarios
+          echo "$SPEC"
+          anypoint-cli-v4 governance:api:validate "$GITHUB_WORKSPACE$SPEC" --rulesets $RULESETS | awk '/Violation/ {print "Se valido la especificación OpenAPI"; exit 0 }'
+        done < "$file"
+
+    - name: Publish API to Anypoint Exchange
+      run: |
+        api-catalog publish-asset --organization="$ANYPOINT_ORG" --client_id="$ANYPOINT_CLIENT_ID" --client_secret="$ANYPOINT_CLIENT_SECRET"
