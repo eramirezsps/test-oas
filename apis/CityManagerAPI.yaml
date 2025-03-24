@@ -1,0 +1,349 @@
+openapi: 3.0.4
+info:
+  title: CityManagerAPI
+  description: |-
+    Consulta de vuelos disponibles
+  version: 1.0.12
+
+servers:
+  - url: https://vuelos.alfa/api/v3
+tags:
+  - name: CityManagerAPI
+    description: Manejo de vuelos disponibles  
+  
+paths: 
+  /cities:
+    get:
+      tags:
+        - cities
+      summary: Find all cities.
+      operationId: Find cities     
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Response'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Response'
+        '400':
+          description: Invalid value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      
+components:
+  schemas:   
+    Name:
+      type: object
+      properties:
+        common:
+          type: string          
+          example: Mexico
+        official:
+          type: string
+          example: United Mexican States    
+        nativeName:
+          $ref: '#/components/schemas/NativeName'  
+    NativeName:
+      type: object
+      properties:        
+        spa:
+          $ref: '#/components/schemas/Spa' 
+    Spa:
+      type: object
+      properties:        
+        common:
+          type: string          
+          example: México
+        official:
+          type: string
+          example: Estados Unidos Mexicanos 
+    Currencies:
+      type: object
+      properties:           
+        MXN:
+          $ref: '#/components/schemas/CurrencyType' 
+    CurrencyType:
+      type: object
+      properties:        
+        name:
+          type: string          
+          example: Mexican peso
+        symbol:
+          type: string
+          example: $ 
+    Idd:
+      type: object
+      properties:        
+        root:
+          type: string          
+          example: +5
+        suffixes:
+          type: array
+          items:
+            type: integer
+    Languages:
+      type: object
+      properties:        
+        spa:
+          type: string          
+          example: Spanish
+    Translations:
+      type: object
+      properties:        
+        ara:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        bre:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        ces:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        cym:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        deu:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        est:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        fin:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        fra:
+          $ref: '#/components/schemas/TranslationsCommon'
+        hrv:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        hun:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        ita:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        jpn:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        kor:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        nld:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        per:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        pol:
+          $ref: '#/components/schemas/TranslationsCommon'
+        por:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        rus:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        slk:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        spa:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        srp:
+          $ref: '#/components/schemas/TranslationsCommon'
+        swe:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        tur:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        urd:
+          $ref: '#/components/schemas/TranslationsCommon'  
+        zho:
+          $ref: '#/components/schemas/TranslationsCommon'          
+    TranslationsCommon:
+      type: object
+      properties:        
+        official:
+          type: string   
+        common:
+          type: string   
+    Demonyms:
+      type: object
+      properties:        
+        eng:
+          $ref: '#/components/schemas/DemonymsCommon'  
+        fra:
+          $ref: '#/components/schemas/DemonymsCommon'   
+    DemonymsCommon:
+      type: object
+      properties:        
+        f:
+          type: string   
+        m:
+          type: string  
+    Maps:
+      type: object
+      properties:        
+        googleMaps:
+          type: string   
+          example: https://goo.gl/maps/s5g7imNPMDEePxzbA
+        openStreetMaps:
+          type: string  
+          example: https://www.openstreetmap.org/relation/114686   
+    Gini:
+      type: object
+      properties:        
+        element:
+          type: number   
+          example: 45.4  
+    Car:
+      type: object
+      properties: 
+        signs:
+          type: array
+          items:
+            type: string       
+        side:
+          type: string   
+          example: right 
+    Flags:
+      type: object
+      properties:              
+        png:
+          type: string   
+          example: https://flagcdn.com/w320/mx.png 
+        svg:
+          type: string   
+          example: https://flagcdn.com/mx.svg
+        alt:
+          type: string   
+          example: The flag of Mexico is composed of three equal vertical bands of green, white and red, with the national coat of arms centered in the white band. 
+    CoatOfArms:
+      type: object
+      properties:              
+        png:
+          type: string   
+          example: https://mainfacts.com/media/images/coats_of_arms/mx.png 
+        svg:
+          type: string   
+          example: https://mainfacts.com/media/images/coats_of_arms/mx.svg
+    CapitalInfo:
+      type: object
+      properties:              
+        latlng:
+          type: array
+          items:
+            type: string  
+    PostalCode:
+      type: object
+      properties:              
+        format:
+          type: string   
+          example: ##### 
+        regex:
+          type: string   
+          example: ^(\\d{5})$   
+    Response:      
+      type: object
+      properties:        
+        name:
+          $ref: '#/components/schemas/Name'
+        tld:
+          type: string          
+          example: .mx
+        cca2:
+          type: string
+          example: MX
+        ccn3:
+          type: integer
+          example: 484
+        cca3:
+          type: string
+          example: MEX
+        cioc:
+          type: string
+          example: MEX
+        independent:
+          type: boolean
+          example: true
+        status:
+          type: string
+          example: officially-assigned
+        unMember:
+          type: boolean
+          example: true
+        currencies:
+          $ref: '#/components/schemas/Currencies'
+        idd:
+          $ref: '#/components/schemas/Idd'
+        capital:
+          type: string
+          example: officially-assigned
+        altSpellings:
+          type: array
+          items:
+            type: string
+        region:
+          type: string
+          example: Americas 
+        subregion:
+          type: string
+          example: North America
+        languages:
+          $ref: '#/components/schemas/Languages'
+        translations:
+          $ref: '#/components/schemas/Translations'
+        latlng:
+          type: array
+          items:
+            type: integer
+        landlocked:
+          type: boolean
+          example: false
+        borders:
+          type: array
+          items:
+            type: string
+        area:
+          type: integer
+          example: 1964375.0
+        demonyms:
+          $ref: '#/components/schemas/Demonyms'
+        flag:
+          type: string
+          example: MX 
+        maps:
+          $ref: '#/components/schemas/Maps'
+        population:
+          type: integer
+          example: 128932753
+        gini:
+          $ref: '#/components/schemas/Gini'
+        fifa:
+          type: string
+          example: MEX
+        car:
+          $ref: '#/components/schemas/Car'
+        timezones:
+          type: array
+          items:
+            type: string
+        continents:
+          type: string
+          example: North America
+        flags:
+          $ref: '#/components/schemas/Flags'
+        coatOfArms:
+          $ref: '#/components/schemas/CoatOfArms'
+        startOfWeek:
+          type: string
+          example: monday
+        capitalInfo:
+          $ref: '#/components/schemas/CapitalInfo'
+        postalCode:
+          $ref: '#/components/schemas/PostalCode'
+        
+    
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+  
+  
